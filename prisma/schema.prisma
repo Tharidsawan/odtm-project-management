@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  status      String      @default("active")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  milestones       Milestone[]
+  members          Member[]
+  tasks            Task[]
+  weeklyProgress   WeeklyProgress[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  progress    Int      @default(0)
+  color       String   @default("blue")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+}
+
+model WeeklyProgress {
+  id        String   @id @default(cuid())
+  weekDate  DateTime
+  planPct   Float    @default(0)
+  actualPct Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  dueDate     DateTime
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  email     String?
+  parentId  String?
+  parent    Member?  @relation("OrgChart", fields: [parentId], references: [id])
+  children  Member[] @relation("OrgChart")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+}
