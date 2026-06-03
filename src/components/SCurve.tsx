@@ -118,7 +118,7 @@ export default function SCurve({ projectId, weeklyProgress, onRefresh }: Props) 
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="week" tick={{ fontSize: 11 }} />
               <YAxis domain={[0, 100]} tickFormatter={(v) => `${v}%`} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(value: number) => `${value.toFixed(1)}%`} />
+              <Tooltip formatter={(value) => `${Number(value).toFixed(1)}%`} />
               <Legend />
               <ReferenceLine y={100} stroke="#e5e7eb" strokeDasharray="4 4" />
               <Line type="monotone" dataKey="Plan" stroke="#3B82F6" strokeWidth={2.5} dot={{ r: 4 }} activeDot={{ r: 6 }} />
